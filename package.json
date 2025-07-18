@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.16.0",
+    "kiteconnect": "^5.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
