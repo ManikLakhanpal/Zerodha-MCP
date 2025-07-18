@@ -1,4 +1,6 @@
 import { kc } from "../config/KiteConfig";
+import axios from "axios";
+import { getTokens } from "../utils/readWrite";
 
 export async function placeOrder(
     variety: "amo" | "regular" | "co" | "auction" | "iceberg",
@@ -42,14 +44,18 @@ export async function getHoldings() {
 
 export async function getMFHoldings() {
   try {
-    const mfHoldings = await kc.getMFHoldings();
-    // console.log(JSON.stringify(mfHoldings, null, 5));
+    const { access_token } = await getTokens()!;
 
-    return JSON.stringify(mfHoldings, null, 2);
-  } catch (err) {
+    const res = await axios.get("https://api.kite.trade/mf/holdings", {
+      headers: {
+        "Authorization": `token ${process.env.API_KEY}:${access_token}`
+      }
+    });
 
-    console.error("Error getting MF holdings:", err);
-    return { error: "Failed to get MF holdings", err };
+    return res.data;
+  } catch (err: any) {
+    console.error("Manual MF Holdings Error:", err?.response?.data || err.message);
+    return { error: "Failed to fetch MF holdings manually", err };
   }
 }
 
