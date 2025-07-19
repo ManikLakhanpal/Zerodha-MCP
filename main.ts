@@ -2,6 +2,7 @@ import {
   getHoldings,
   placeOrder,
   getMFHoldings,
+  getMFSIPs,
 } from "./functions/OrderRelated";
 import { generateSession, login, setLoginTokens, startKite } from "./config/KiteConfig";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -42,10 +43,27 @@ server.tool(
 
 // * Tool to get the profile of the user on Zerodha
 server.tool(
-  "zerodha-profile",
-  "Get the profile of the user on Zerodha",
+  "get-zerodha-holdings",
+  "Get the Stock Market holdings of the user on Zerodha",
   async () => {
     const data = await getHoldings();
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(data, null, 2), // pretty print
+        },
+      ],
+    };
+  }
+);
+
+server.tool(
+  "get-zerodha-mutual-fund-sips",
+  "Get the Mutual Fund SIPs of the user on Zerodha",
+  async () => {
+    const data = await getMFSIPs();
 
     return {
       content: [

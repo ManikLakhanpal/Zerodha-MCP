@@ -32,13 +32,30 @@ export async function placeOrder(
 
 export async function getHoldings() {
   try {
-    const profile = await kc.getHoldings();
-    // console.log(profile);
+    const data = await kc.getHoldings();
+    // console.log(data);
 
-    return profile;
+    return data;
   } catch (err) {
-    console.error("Error getting profile:", err);
-    return { error: "Failed to get profile", err };
+    console.error("Error getting data:", err);
+    return { error: "Failed to get your Holdings", err };
+  }
+}
+
+export async function getMFSIPs() {
+  try {
+    const { access_token } = await getTokens()!;
+
+    const res = await axios.get("https://api.kite.trade/mf/sips", {
+      headers: {
+        "Authorization": `token ${process.env.API_KEY}:${access_token}`
+      }
+    });
+
+    return res.data;
+  } catch(err) {
+    console.error("Error getting your SIP data:", err);
+    return { error: "Failed to get your SIP data", err };
   }
 }
 
